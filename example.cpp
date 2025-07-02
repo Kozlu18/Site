@@ -305,10 +305,10 @@ int main()
             add_teacher_account(teacher);
         else if(action == 'S' ||action == 's')
             add_student_account(student);
-        //else if(action == 'F' || action == 'f')
-            //tlogged_in = tlogin_account(teacher, logged_in);
-        //else if(action == 'K' || action == 'k')
-            //slogged_in = slogin_account(student, logged_in);
+        else if(action == 'F' || action == 'f')
+            tlogged_in = tlogin_account(teacher, logged_in);
+        else if(action == 'K' || action == 'k')
+            slogged_in = slogin_account(student, logged_in);
         else if(action == 'H' || action == 'h')
             give_homework(book);
         else if(action == 'C' || action == 'c')
