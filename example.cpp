@@ -71,73 +71,6 @@ bool is_valid_password(const string &password)
 
 }
 
-bool login_account(const User &user)
-{
-    string email_inputs, password_inputs;
-    int attemps = 0;
-    while(attemps < 3)
-    {
-        cout << "Please enter your email: ";
-        cin >> email_inputs;
-        cout << "Please enter your password: ";
-        cin >> password_inputs;
-        if(email_inputs == user.email || password_inputs == user.password)
-        {
-            cout << "You logged system enjoy." << endl;
-            return true;
-        }
-        cout << "You writted wrong information please try again." << endl;
-        attemps += 1;
-    }
-    cout << "To many wrong attemps. Please wait 30 seconds...";
-    this_thread::sleep_for(chrono::seconds(30));
-}
-
-bool tlogin_account(const Teacher &teacher, bool &logged_in)
-{
-    string email_inputs, password_inputs;
-    int attemps = 0;
-    while(attemps < 3)
-    {
-        cout << "Please write teacher email : ";
-        cin >> email_inputs;
-        cout << "Please write teacher password : ";
-        cin >> password_inputs;;
-        if(email_inputs == teacher.email && password_inputs == teacher.password)
-        {
-            cout << "You logged teacher account." << endl;
-            logged_in = false;
-            return true;
-        }
-        cout << "Your information is wrong try again." << endl;
-        attemps += 1;
-    }
-    cout << "To many wrong attemps. Please wait 30 seconds...";
-    this_thread::sleep_for(chrono::seconds(30));
-}
-
-bool slogin_account(const Student &student, bool &logged_in)
-{
-    string email_inputs, password_inputs;
-    int attemps = 0;
-    while(attemps < 3)
-    {
-        cout << "Please enter student email : ";
-        cin >> email_inputs;
-        cout << "Please enter student password : ";
-        cin >> password_inputs;
-        if(email_inputs == student.email && password_inputs == student.password)
-        {
-            cout << "You logged student account. Enjoy.";
-            logged_in = false;
-            return true;
-        }
-        cout << "Your personal information is wrong. Try again!" << endl;
-    }
-    cout << "To many wrong attemps. Please wait 30 seconds...";
-    this_thread::sleep_for(chrono::seconds(30));
-}
-
 void create_accout(User &user)
 {
     cout << "Please write first name : ";
@@ -265,6 +198,74 @@ void change_information(User &user)
     cout << "You changed information enjoy." << endl;
 }
 
+bool login_account(const User &user)
+{
+    string email_inputs, password_inputs;
+    int attemps = 0;
+    while(attemps < 3)
+    {
+        cout << "Please enter your email: ";
+        cin >> email_inputs;
+        cout << "Please enter your password: ";
+        cin >> password_inputs;
+        if(email_inputs == user.email && password_inputs == user.password)
+        {
+            cout << "You logged system enjoy." << endl;
+            return true;
+        }
+        cout << "You writted wrong information please try again." << endl;
+        attemps += 1;
+    }
+    cout << "To many wrong attemps. Please wait 30 seconds...";
+    this_thread::sleep_for(chrono::seconds(30));
+    return false;
+}
+
+bool tlogin_account(const Teacher &teacher)
+{
+    string email_inputs, password_inputs;
+    int attemps = 0;
+    while(attemps < 3)
+    {
+        cout << "Please write teacher email : ";
+        cin >> email_inputs;
+        cout << "Please write teacher password : ";
+        cin >> password_inputs;;
+        if(email_inputs == teacher.email && password_inputs == teacher.password)
+        {
+            cout << "You logged teacher account." << endl;
+            return true;
+        }
+        cout << "Your information is wrong try again." << endl;
+        attemps += 1;
+    }
+    cout << "To many wrong attemps. Please wait 30 seconds...";
+    this_thread::sleep_for(chrono::seconds(30));
+    return false;
+}
+
+bool slogin_account(const Student &student)
+{
+    string email_inputs, password_inputs;
+    int attemps = 0;
+    while(attemps < 3)
+    {
+        cout << "Please enter student email : ";
+        cin >> email_inputs;
+        cout << "Please enter student password : ";
+        cin >> password_inputs;
+        if(email_inputs == student.email && password_inputs == student.password)
+        {
+            cout << "You logged student account. Enjoy.";
+            return true;
+        }
+        cout << "Your personal information is wrong. Try again!" << endl;
+    }
+    cout << "To many wrong attemps. Please wait 30 seconds...";
+    this_thread::sleep_for(chrono::seconds(30));
+    return false;
+}
+
 int main()
 {
     User user;
@@ -284,7 +285,7 @@ int main()
         else if(button == 'L' || button == 'l')
             logged_in = login_account(user);
     }
-    while(logged_in == true)
+    while(logged_in == true && tlogged_in == false && slogged_in == false)
     {
         cout << "Welcome the site :" << " " << user.user_name << endl; 
         cout << "B : Add book : " << endl;
@@ -306,9 +307,23 @@ int main()
         else if(action == 'S' ||action == 's')
             add_student_account(student);
         else if(action == 'F' || action == 'f')
-            tlogged_in = tlogin_account(teacher, logged_in);
+        {
+            tlogged_in = tlogin_account(teacher);
+            if(tlogged_in == true)
+            {
+                logged_in = false;
+                slogged_in = false;
+            }
+        }
         else if(action == 'K' || action == 'k')
-            slogged_in = slogin_account(student, logged_in);
+        {
+            slogged_in = slogin_account(student);
+            if(slogged_in == true)
+            {
+                tlogged_in = false;
+                logged_in = false;
+            }
+        }
         else if(action == 'H' || action == 'h')
             give_homework(book);
         else if(action == 'C' || action == 'c')
@@ -322,17 +337,25 @@ int main()
         else
             cout << "You wrong pressed key. Please try again : " << endl;
     }
-    while(tlogged_in == true && logged_in == false && slogged_in == false)
+    while(tlogged_in == true)
     {
+        cout << "Welcome : " << teacher.user_name << endl;
         cout << "H : Give a homework for student : " << endl;
         cout << "C : Check for student homework : " << endl;
         cout << "G : Change information : " << endl;
         cout << "Q : Quit the program : " << endl;
+        char action;
+        cin >> action;
     }
     while(slogged_in == true)
     {
-        cout << "Your homework : " << endl;
+        cout << "Welcome : " << student.username << endl;
+        cout << "C : Your homework " << endl;
         cout << "G : Change information : " << endl;
         cout << "Q : Qit the program : " << endl;
+        char action;
+        cin >> action;
     }
+
+
 }
