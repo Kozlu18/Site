@@ -22,7 +22,7 @@ struct Book
     int nfq;
     int nft;
     string topic_name;
-    int topic;
+    int topic = 0;
     vector<string> test_name;
 };
 
@@ -44,6 +44,7 @@ struct Student
     string username;
     string password;
     string birth;
+    vector<string> homework;
 };
 
 bool is_valid_email(const string &email)
@@ -100,26 +101,30 @@ void add_book(Book &book)
     cin >> book.nfq;
     cout << "Please enter number of tests : ";
     cin >> book.nft;
-    int word = 0;
-    for(int i = 0 + word; i < book.nft; i++)
+    int j = book.nft;
+    int l = 0;
+    for(int i = 0 + l; i < j; i++)
     {
         cout << "Please write topic name : ";
         cin >> book.topic_name;
         cout << "How many test are topic : ";
         cin >> book.topic;
+        l = book.topic;
+        cout << "Please dont use space button!!!! use '-' key or use '_' please!!!! " << endl;
         for(int k = 0; k < book.topic; k++)
         {
             string test;
-            cout << "Please write how many words are in the test name : ";
-            cin >> word;
-            for(int j = 0; j < word; j++)
-            {
-                cout << "Please write test name : ";
-                cin >> test;
-                book.test_name.push_back(test);
-            }
+            cout << "Please write test name : ";
+            cin >> test;
+            book.test_name.push_back(test);
             cout << "You added test name : " << endl;
         }
+        if(l + i > j)
+        {
+            cout << "You added test!" << endl;
+            break;
+        }
+            break;
         cout << "You added topic test name write another topic test name : " << endl;
     }
 }
@@ -168,9 +173,57 @@ void add_student_account(Student &student)
     cout << "You created student account : " << endl;
 }
 
-void give_homework(Book &book)
+void give_homework(Book &book, User &user, Student &student)
 {
-    
+    cout << endl;
+    cout << "Welcome to give homework page : " << user.user_name << endl;
+    cout << "S : Show the book test : " << endl;
+    cout << "Q : Quit the give homework page : " << endl;
+    char act;
+    cin >> act;
+    int l = book.nft;
+    if(act == 'S' || act == 's')
+    {
+        int i = 0;
+        while(book.nft--)
+        {
+            cout << book.test_name[i] << endl;
+            i++;
+        }
+        cout << "Please write how many give test for student : ";
+        int K;
+        cin >> K;
+        while(K > l)
+        {
+            cout << "You entered bigger than number of tests. Writed the how many are test have : " << l << " Please write new how many test give homework : " << endl;
+            cin >> K;
+        }
+        for(int i = 0; i < K; i++)
+        {
+            int l = 0;
+            cout << "Please write test name (0 to nft) : ";
+            cin >> l;
+            student.homework.push_back(book.test_name[l]);
+        }
+        cout << "You gived test for student." << endl;
+    }
+    else if(act == 'Q' || act == 'q')
+    {
+        cout << "Exiting the program...";
+        this_thread::sleep_for(chrono::seconds(3));
+        cout << "You exited the give homework page." << endl;
+    }
+    else{
+        cout << "You wrong pressed key. Please try again : " << endl;
+    }
+}
+
+void show_homework(Student &student, Book &book)
+{
+    cout << "Showing the homework..." << endl;
+    for(int i = 0; i < student.homework.size(); i++)
+        cout << student.homework[i] << endl;
+    cout << "Showed the homework." << endl;
 }
 
 void check_homework(Book &book, Student &student)
@@ -196,6 +249,48 @@ void change_information(User &user)
         cin >> user.password;
     }while(!is_valid_password(user.password));
     cout << "You changed information enjoy." << endl;
+}
+
+void give_homework_teacher(Book &book, Teacher &teacher)
+{
+
+}
+
+void change_tinformation(Teacher &teacher)
+{
+    string email_inputs, password_inputs;
+    cout << "Please enter your email : ";
+    cin >> email_inputs;
+    cout << "Please enter your password : ";
+    cin >> password_inputs;
+    while(email_inputs != teacher.email || password_inputs != teacher.password)
+    {
+        cout << "Your information is wrong please try again : " << endl;
+        cout << "Please enter email : ";
+        cin >> email_inputs;
+        cout << "Please enter your password : ";
+        cin >> password_inputs;
+    }
+    cout << "Please write new username : ";
+    cin >> teacher.user_name;
+    cout << "Please write old password : ";
+    cin >> password_inputs;;
+    while(password_inputs != teacher.password)
+    {
+        cout << "Your old password is wrong. Please try again." << endl;
+        cout << "Please enter old password : ";
+        cin >> password_inputs;
+    }
+    do{
+        cout << "Please write new password : ";
+        cin >> teacher.password;
+    }while(!is_valid_password(teacher.password));
+    cout << "Your information is changed. Enjoy!" << endl;
+}
+
+void check_for_homeworkstd(Book &book, Teacher &teacher, Student &student)
+{
+
 }
 
 bool login_account(const User &user)
@@ -288,19 +383,20 @@ int main()
     while(logged_in == true && tlogged_in == false && slogged_in == false)
     {
         cout << "Welcome the site :" << " " << user.user_name << endl; 
-        cout << "B : Add book : " << endl;
+        cout << "A : Add book : " << endl;
         cout << "T : Add teacher account : " << endl;
         cout << "S : Add student account : " << endl;
         cout << "F : Login teacher account : " << endl;
         cout << "K : Login student account : " << endl;
         cout << "H : Give a homework for student : " << endl;
+        cout << "L : Show the student homework : " << endl;
         cout << "C : Check for student homework : " << endl;
         cout << "G : Change information : " << endl;
         cout << "Q : Quit the program : " << endl;
         char action;
         cin >> action;
 
-        if(action == 'B' || action == 'b')
+        if(action == 'A' || action == 'a')
             add_book(book);
         else if(action == 'T' || action == 't')
             add_teacher_account(teacher);
@@ -325,7 +421,9 @@ int main()
             }
         }
         else if(action == 'H' || action == 'h')
-            give_homework(book);
+            give_homework(book, user, student);
+        else if(action == 'L' || action == 'l')
+            show_homework(student, book);
         else if(action == 'C' || action == 'c')
             check_homework(book, student);
         else if(action == 'G' || action == 'g')
@@ -352,6 +450,18 @@ int main()
         cout << "Q : Quit the program : " << endl;
         char action;
         cin >> action;
+        if(action == 'H' || action == 'h')
+            give_homework_teacher(book, teacher);
+        else if(action == 'C' || action == 'c')
+            check_for_homeworkstd(book, teacher, student);
+        else if(action == 'G' || action == 'g')
+            change_tinformation(teacher);
+        else if(action == 'Q' || action == 'q')
+        {
+
+        } 
+
+        
     }
     while(slogged_in == true)
     {
