@@ -332,7 +332,13 @@ int main()
             change_information(user);
         else if(action == 'Q' || action == 'q')
         {
-
+            cout << "Exiting the program...";
+            this_thread::sleep_for(chrono::seconds(3));
+            cout << endl;
+            cout << "Exited the program." << endl;
+            tlogged_in = false;
+            logged_in = false;
+            slogged_in = false;
         }
         else
             cout << "You wrong pressed key. Please try again : " << endl;
@@ -356,6 +362,4 @@ int main()
         char action;
         cin >> action;
     }
-
-
 }
