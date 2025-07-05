@@ -227,11 +227,6 @@ void show_homework(Student &student, Book &book)
     cout << "Showed the homework." << endl;
 }
 
-void check_homework(Book &book, Student &student)
-{
-
-}
-
 void change_information(User &user)
 {
     cout << "Please write new username : ";
@@ -268,11 +263,6 @@ void change_sinformation(Student &student)
         cin >> student.password;
     }while(!is_valid_password(student.password));
     cout << "You changed information enjoy." << endl;
-}
-
-void give_homework_teacher(Book &book, Teacher &teacher)
-{
-
 }
 
 void change_tinformation(Teacher &teacher)
@@ -504,7 +494,7 @@ int main()
         char action;
         cin >> action;
         if(action == 'H' || action == 'h')
-            give_homework_teacher(book, teacher);
+            give_homework(book, user, student);
         else if(action == 'C' || action == 'c')
             check_for_homeworkstd(student);
         else if(action == 'G' || action == 'g')
@@ -544,7 +534,20 @@ int main()
             change_sinformation(student);
         else if(action == 'Q' || action == 'q')
         {
-
+            cout << "Are you sure exit the program. Please write 'SURE' : " << endl;
+            char act;
+            cin >> act;
+            while(act == 'SURE')
+            {
+                cout << "You writed wrong please try again : " << endl;
+                cin >> act;
+            }
+            cout << "Exiting the program...";
+            this_thread::sleep_for(chrono::seconds(3));
+            cout << "You exited the program." << endl;
+            slogged_in = false;
+            tlogged_in = false;
+            logged_in = false;
         }
         else
             cout << "You pressed wrong key please try again : " << endl;
