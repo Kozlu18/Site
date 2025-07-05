@@ -45,6 +45,7 @@ struct Student
     string password;
     string birth;
     vector<string> homework;
+    vector<string> thomework;
 };
 
 bool is_valid_email(const string &email)
@@ -251,6 +252,24 @@ void change_information(User &user)
     cout << "You changed information enjoy." << endl;
 }
 
+void change_sinformation(Student &student)
+{
+    string old_password;
+    cout << "Please enter your old password : ";
+    cin >> old_password;
+    while(old_password !=  student.password)
+    {
+        cout << "You wrong entered password. Please try again : ";
+        cin >> old_password;
+    }
+    cout << "You writed true password." << endl;
+    do{
+        cout << "Please write new password : ";
+        cin >> student.password;
+    }while(!is_valid_password(student.password));
+    cout << "You changed information enjoy." << endl;
+}
+
 void give_homework_teacher(Book &book, Teacher &teacher)
 {
 
@@ -288,9 +307,43 @@ void change_tinformation(Teacher &teacher)
     cout << "Your information is changed. Enjoy!" << endl;
 }
 
-void check_for_homeworkstd(Book &book, Teacher &teacher, Student &student)
+void check_for_homeworkstd(Student &student)
 {
+    cout << "S : Show ticked homework : " << endl;
+    cout << "Q : Exit the check for homework page : " << endl;
+    char act;
+    cin >> act;
+    if(act == 'S' || act == 's')
+    {
+        for(int i = 0; i < student.homework.size(); i++)
+        {
+            cout << student.homework[i] << endl;
+        }
+        cout << "You showed homework and ticked homework." << endl;
+    }
+    else if(act == 'Q' || act == 'q')
+    {
+        cout << "Exiting the page...";
+        this_thread::sleep_for(chrono::seconds(3));
+        cout << "You exited the page." << endl;
+    }
+    else{
+        cout << "You pressed wrong key please try again : " << endl;
+    }
+}
 
+void tick_homework(Student &student)
+{
+    for(int i = 0; i < student.homework.size(); i++)
+        cout << student.homework[i] << endl;
+    for(int i = 0; i < student.homework.size(); i++)
+    {
+        cout << "Please write test index : ";
+        int k;
+        cin >> k;
+        student.homework[k] += "*";
+    }
+    cout << "You ticked the homework." << endl;
 }
 
 bool login_account(const User &user)
@@ -425,7 +478,7 @@ int main()
         else if(action == 'L' || action == 'l')
             show_homework(student, book);
         else if(action == 'C' || action == 'c')
-            check_homework(book, student);
+            check_for_homeworkstd(student);
         else if(action == 'G' || action == 'g')
             change_information(user);
         else if(action == 'Q' || action == 'q')
@@ -453,23 +506,47 @@ int main()
         if(action == 'H' || action == 'h')
             give_homework_teacher(book, teacher);
         else if(action == 'C' || action == 'c')
-            check_for_homeworkstd(book, teacher, student);
+            check_for_homeworkstd(student);
         else if(action == 'G' || action == 'g')
             change_tinformation(teacher);
         else if(action == 'Q' || action == 'q')
         {
-
-        } 
-
+            cout << "Are you sure exit the page. Please write 'SURE' : " << endl;
+            char act;
+            cin >> act;
+            while(act == 'SURE')
+            {
+                cout << "You wrong writed please try again : " << endl;
+                cin >> act;
+            }
+            cout << "Exiting the program...";
+            this_thread::sleep_for(chrono::seconds(3));
+            tlogged_in = false;
+            slogged_in = false;
+            logged_in = false;
+        }
+        else
+            cout << "You pressed wrong key pleae try again : " << endl; 
         
     }
     while(slogged_in == true)
     {
         cout << "Welcome : " << student.username << endl;
-        cout << "C : Your homework " << endl;
+        cout << "C : Your homework and tick " << endl;
         cout << "G : Change information : " << endl;
         cout << "Q : Qit the program : " << endl;
         char action;
         cin >> action;
+
+        if(action == 'C' || action == 'c')
+            tick_homework(student);
+        else if(action == 'G' ||action == 'g')
+            change_sinformation(student);
+        else if(action == 'Q' || action == 'q')
+        {
+
+        }
+        else
+            cout << "You pressed wrong key please try again : " << endl;
     }
 }
